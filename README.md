@@ -123,4 +123,41 @@ Apart from this User can test HTTP connection using apps such as Youtube, Gmail,
 > - All the above app and mechanism used in sample app always uses AOSP based Pac parsing library and myIpAdress() always return LoopBack address
 > - Only traffic originated from Chorme uses a different Chrome Pac parser lib and this lib always return address as Interface IP address
 
+## Trouble Shooting
+
+**How would i know PAC file is actually Downloaded in Device when i configured PAC url while configuring WIFI SSID**
+
+Connect device with adb 
+Run “adb logcat | grep proxy”  look for PROBE_PAC 
+- In case of success download of PAC: NetworkMonitor/104: PROBE_PAC http://192.168.1.6:8530/proxy.pac PAC fetch 200 response interpreted as 204 response.
+- In case of failure : NetworkMonitor/185: PROBE_PAC http://192.168.1.6:8530/proxy.pac Probe failed with exception java.net.SocketTimeoutException: timeout
+
+##
+
+**How would i confirm whether PAC Download request is hitting the PAC server**
+
+Monitor Local PAC hosting server:
+-      When D/L hits you can see multiple D/L requests: like below  D/L request hits PAC server
+-     192.168.1.6 - - [30/Mar/2023 11:06:42] "GET /proxy.pac HTTP/1.1" 200 -
+
+##
+
+**i had configured everything right but still PAC is not downloaded to device when its hosted Locally**
+
+- Look for Firewall setting of your public and private network, the port you are using might be blocked, 
+- add rule in firewall to allow incoming traffic on the port you mentioned for local PAC hosting server (for my case port 8000 is blocked for incoming traffic so i used port 8530)
+
+##
+
+**Opening any page in chrome gives a Warning and page cant be opened**
+
+If traffic is routed through charles then you had to install CharleCA.cer certificate in your device
+- adb push charlesCA.cer /sdcard
+- Go to settings --> Security --> Encryption --> Install CA certificate
+
+
+
+
+
+
      
