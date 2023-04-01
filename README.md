@@ -107,5 +107,18 @@ Note right of Chrome: As per PAC rule traffic will be routed to Charles Proxy
 Chrome ->> Charles Proxy:Connect https//www.youtube.com
 
 ```
+## Sample App
+A sample Android APP is developed to test the behavior of Application using different ways to communicate with HTTP/S. This includes
+- Opening an URL via WebView
+- Opening an URL via Native Connection object
+- Downloading a file using Android Download manager
+- Downloading a file using OKHTTP 
+- Downloading a file using Native Connection object
+
+Apart from this User can test HTTP connection using apps such as Youtube, Gmail, Maps, Chrome etc
+
+**Conclusion**
+> - All the above app and mechanism used in sample app always uses AOSP based Pac parsing library and myIpAdress() always return LoopBack address
+> - Only traffic originated from Chorme uses a different Chrome Pac parser lib and this lib always return address as Interface IP address
 
      
