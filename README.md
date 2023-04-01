@@ -82,4 +82,23 @@ if (isInNet(myIpAddress(), "192.168.1.0", "255.255.255.0"))  ==> if IP adress re
 ```
 return "DIRECT" ==> if IP is not LoopBack or not in the range of Subnet then Bypass Proxy
 ```
+## **Sequence Diagram for Proxy Redirect**
+- **myIpAddress()** behavior is different in AOSP Pac lib and Chrome Pac lib, Once Proxy PAC is applied each and every HTTP/S traffic from Device will be routed according to PAC file, basically from above example every HTTP/S request will be routed to either CCProxy or Charles Proxy according to value returned by myIpAddress()
+> - AOSP Pac lib myIpAddress() always return LoopBack adress 
+> - Chrome Pac lib myIpAddress() always return Physical IP of the device
+
+```
+Note: Application such as YouTube, Gmail, Maps or application based on WebView, OKHTTP etc always uses AOSP provided Pac Parser
+Browser such as Chrome, Mozzilla, Firefox use their own implemenation of PAC processing and return Physical IP address when enquired by myIpAddress()
+```
+```mermaid
+
+sequenceDiagram
+Pac-DL ->> 192.168.1.6-8530: http// 192.168.1.6-8530/Proxy.pac
+192.168.1.6-8530 --x Pac-DL: Proxy.pac
+Pac-DL ->> bit.ly: http//bit.ly/40oWfaa
+bit.ly --x Pac-DL: Proxy.pac
+Note right of bit.ly: Pac file will be downloaded from Google cloud storage.
+
+```
      
