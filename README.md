@@ -30,15 +30,14 @@ PAC file can be hosted locally using a simple python server (requires python3)
 ```mermaid
 
 sequenceDiagram
-Youtube ->> AOSP PAC Parser: https//www.youtube.com
-Note right of AOSP PAC Parser: myIpAddress() return Loopback
-AOSP PAC Parser --x Youtube: CCProxy 
-
+Pac-DL ->> 192.168.1.6-8530: http// 192.168.1.6-8530/Proxy.pac
+192.168.1.6-8530 --x Pac-DL: Proxy.pac
 Pac-DL ->> bit.ly: http//bit.ly/40oWfaa
 bit.ly --x Pac-DL: Proxy.pac
 Note right of bit.ly: Pac file will be downloaded from Google cloud storage.
 
 ```
+
 
 ## Proxy Server Setup
 You have choice of 2 freely available Proxy server (on Windows environment) 
@@ -96,11 +95,17 @@ Browser such as Chrome, Mozzilla, Firefox use their own implemenation of PAC pro
 ```mermaid
 
 sequenceDiagram
-Pac-DL ->> 192.168.1.6-8530: http// 192.168.1.6-8530/Proxy.pac
-192.168.1.6-8530 --x Pac-DL: Proxy.pac
-Pac-DL ->> bit.ly: http//bit.ly/40oWfaa
-bit.ly --x Pac-DL: Proxy.pac
-Note right of bit.ly: Pac file will be downloaded from Google cloud storage.
+Youtube ->> AOSP PAC Parser: https//www.youtube.com
+Note right of AOSP PAC Parser: myIpAddress() returns Loopback Address
+AOSP PAC Parser --x Youtube: 127.0.0.1 
+Note right of Youtube: As per PAC rule traffic will be routed to CCProxy
+Youtube ->> CCProxy: Connect https//www.youtube.com
+Chrome ->> Chrome PAC Parser: https//www.youtube.com
+Note right of Chrome PAC Parser: myIpAddress() returns Physical IP Address
+Chrome PAC Parser --x Chrome: 192.168.1.8
+Note right of Chrome: As per PAC rule traffic will be routed to Charles Proxy
+Chrome ->> Charles Proxy:Connect https//www.youtube.com
 
 ```
+
      
